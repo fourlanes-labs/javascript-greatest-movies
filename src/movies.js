@@ -2,38 +2,63 @@
 // _Bonus_: It seems some of the directors had directed multiple movies so they will pop up multiple times in the array of directors.
 // How could you "clean" a bit this array and make it unified (without duplicates)?
 function getAllDirectors(moviesArray) {
+  let directors = [];
 
-    let directors = [];
+  moviesArray.forEach((movie) => {
+    directors.push(movie.directors);
+  });
 
-    moviesArray.forEach(movie => {
-
-        directors.push(movie.directors)
-    });
-
-
-    return directors
-
+  return directors;
 }
 
 // Iteration 2: Steven Spielberg. The best? - How many drama movies did STEVEN SPIELBERG direct?
 function howManyMovies(moviesArray) {
+  let moviesBySpielBerg = [];
 
-    let moviesBySpielBerg = [];
+  moviesArray.forEach((movie) => {
+    if (
+      movie.director === "Steven Spielberg" &&
+      movie.genre.includes("Drama")
+    ) {
+      moviesBySpielBerg.push(movie.title);
+    }
+  });
 
-    moviesArray.forEach(movie => {
-        if (movie.director === "Steven Spielberg" && movie.genre.includes('Drama')){
-            
-            moviesBySpielBerg.push(movie.title)
-        }
-    })
+  const movieCount = moviesBySpielBerg.length;
 
-    const movieCount = moviesBySpielBerg.length
-
-    return movieCount
+  return movieCount;
 }
 
 // Iteration 3: All scores average - Get the average of all scores with 2 decimals
-function scoresAverage(moviesArray) {}
+function scoresAverage(moviesArray) {
+  if (moviesArray.length === 0) {
+    return 0;
+  }
+
+  const moviesWithScores = moviesArray.filter(
+    (movie) => typeof movie.score === "number"
+  );
+
+  if (moviesWithScores.length === 0) {
+    return 0;
+  }
+
+  const totalScore = moviesArray.reduce((accumulator, movie) => {
+    const newTotalScore = accumulator + (movie.score || 0);
+    return newTotalScore;
+  }, 0);
+
+  let scoreArray = [];
+
+  moviesArray.forEach((movie) => {
+    scoreArray.push(movie.score);
+  });
+  const movieScoreAverage = totalScore / scoreArray.length;
+
+  const roundedAverage = parseFloat(movieScoreAverage.toFixed(2));
+
+  return roundedAverage;
+}
 
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesScore(moviesArray) {}
