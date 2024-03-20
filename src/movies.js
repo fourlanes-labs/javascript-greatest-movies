@@ -62,7 +62,6 @@ function scoresAverage(moviesArray) {
 
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesScore(moviesArray) {
-
   const dramaMovies = moviesArray.filter((movie) =>
     movie.genre.includes("Drama")
   );
@@ -81,26 +80,80 @@ function dramaMoviesScore(moviesArray) {
 }
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
+
 function orderByYear(moviesArray) {
+  const sortedMovies = moviesArray.slice();
 
-    let yearArray = [];
+  sortedMovies.sort((a, b) => {
+    if (a.year !== b.year) {
+      return a.year - b.year;
+    } else {
+      return a.title.localeCompare(b.title);
+    }
+  });
 
-    moviesArray.forEach(movie => {
-
-        yearArray.push(movie.year)
-    })
-
-    const sortedArray = yearArray.sort((a,b) => (a-b))
-
-    return sortedArray;
-
+  return sortedMovies;
 }
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
-function orderAlphabetically(moviesArray) {}
+function orderAlphabetically(moviesArray) {
+  const sortedMovies = moviesArray.slice();
+
+  sortedMovies.sort((a, b) => a.localeCompare(b));
+
+  const titles = sortedMovies.map((movie) => movie.title);
+
+  return titles.length > 20 ? titles.slice(0, 20) : titles;
+}
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(moviesArray) {}
+function turnHoursToMinutes(moviesArray) {
+  const modifiedMovies = [];
+
+  for (let movie of moviesArray) {
+    const modifiedMovie = Object.assign({}, movie);
+    const durationParts = modifiedMovie.duration.split(" ");
+    let totalMinutes = 0;
+    for (let part of durationParts) {
+      if (part.includes("h")) {
+        totalMinutes += parseInt(part) * 60;
+      } else if (part.includes("min")) {
+        totalMinutes += parseInt(part);
+      }
+    }
+    modifiedMovie.duration = totalMinutes;
+    modifiedMovies.push(modifiedMovie);
+  }
+  return modifiedMovies;
+}
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+function bestYearAvg(moviesArray) {
+  if (moviesArray.length === 0) {
+    return null;
+  }
+  const years = {};
+  moviesArray.forEach((movie) => {
+    if (!years[movie.year]) {
+      years[movie.year] = { totalScore: 0, movieCount: 0 };
+    }
+    years[movie.year].totalScore += movie.score;
+    years[movie.year].movieCount++;
+  });
+
+  let bestYear = null;
+  let highestAverage = -Infinity;
+
+  for (const year in years) {
+    const averageScore = years[year].totalScore / years[year].movieCount;
+    if (
+      averageScore > highestAverage ||
+      (averageScore === highestAverage && parseInt(year) < parseInt(bestYear))
+    ) {
+      bestYear = year;
+      highestAverage = averageScore;
+    }
+  }
+
+  return parseInt(bestYear);
+}
